@@ -18,6 +18,7 @@ build:
         code: |
           echo $REPO_PATH
           cd $REPO_PATH/gohan
+          make deps
           make
 
 deploy:
@@ -34,13 +35,12 @@ deploy:
     - script:
         name: cross compile
         code: |
-          export PATH=/go/bin:$PATH
-          cd /
-          TARGETS="linux/amd64 linux/386 darwin/amd64 darwin/386 windows/386" ./build.sh github.com/cloudwan/gohan
+          cd ${WERCKER_SOURCE_DIR}
+          make cross_compile
     - script:
         name: zip
         code: |
-          cd /build
+          cd ${WERCKER_SOURCE_DIR}/bin/
           mkdir -p ${WERCKER_OUTPUT_DIR}
           for binary in $(ls); do
               canonical_name=$(echo ${binary} | sed -e 's/-[a-zA-Z0-9-]*//')

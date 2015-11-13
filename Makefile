@@ -13,7 +13,7 @@ else
 endif
 
 
-all: format lint deps build test
+all: format lint build test
 
 deps:
 	@echo "$(OK_COLOR)==> Installing dependencies$(NO_COLOR)"
@@ -35,6 +35,13 @@ lint:
 build:
 	@echo "$(OK_COLOR)==> Building$(NO_COLOR)"
 	gb build -R $(CURDIR)
+
+cross_compile:
+	GOOS=linux GOARCH=amd64 gb build -R $(CURDIR)
+	GOOS=linux GOARCH=386 gb build -R $(CURDIR)
+	GOOS=darwin GOARCH=amd64  gb build -R $(CURDIR)
+	GOOS=darwin GOARCH=386  gb build -R $(CURDIR)
+	GOOS=windows GOARCH=386  gb build -R $(CURDIR)
 
 install:
 	@echo "$(OK_COLOR)==> Installing$(NO_COLOR)"
